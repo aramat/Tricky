@@ -1,51 +1,57 @@
 module maze(input [9:0]x, input[9:0]y, input clk, input moveup, input movedown, input moveright, output [9:0] red, output [9:0] green, output [9:0] blue);
 
-// key1 = up, key2 = down, key3 = right
+// x1, y1 designate the upperleft corner of the square
+reg [9:0] squarex1, squarey1, squarex1_next, squarey1_next;
+wire [9:0] squarex1_check, squarey1_check, squarey2, squarex2;
+localparam SQUARE_SIZE = 15; 
+wire square_on;
+
+wire refr_tick;
+assign refr_tick = (y == 481) && (x == 0);
+
 reg [2:0] idx;
-reg [19:0] slowclk = 0; 
-
-// initialize 4 numbers designating the dimensions of a square. x1 is where left edge begins, x2 is right edge, y1 is bottom edge, y2 is top edge
-reg [9:0] squarex1, squarex2, squarey1, squarey2;
-
 assign red = (idx[0]? 10'h3ff: 10'he1);
 assign green = (idx[1]? 10'h3ff: 10'h2c2);
 assign blue = (idx[2]? 10'h3ff: 10'h37a);
 
-initial begin
-	squarex1 = 9'd55;
-	squarex2 = 9'd70;
-	squarey1 = 9'd55;
-	squarey2 = 9'd70;
+initial 
+begin
+	squarex1 <= 9'd55;
+	squarey1 <= 9'd55;
 end
-
+	
 // moving the square, DON'T USE POSEDGE
 //always @(negedge moveup or negedge moveright or negedge movedown)
-always @(posedge moveright)
+assign squarex1_check = squarex1;
+assign squarey1_check = squarey1;
+assign squarex2 = squarex1_check + SQUARE_SIZE; 
+assign squarey2 = squarey1_check + SQUARE_SIZE;
+assign square_on = (squarex1_check < x) && (squarex2 >= x) && (squarey1_check < y) && (squarey2 >= y);
+
+always @(posedge clk)
 begin
-	if (moveup)
-	begin
-		//squarey1 = 0;//squarey1 - 9'd10;
-		//squarey2 = 0;//squarey2 - 9'd10;
-		squarey1 = squarey1 - 9'd10;
-		squarey2 = squarey2 - 9'd10;
-	end
-	else if (movedown)
-	begin
-		squarey1 = squarey1 + 9'd10;
-		squarey2 = squarey2 + 9'd10;
-	end
-	else if (moveright)
-	begin
-		squarex1 = squarex1 + 9'd10;
-		squarex2 = squarex2 + 9'd10;
-	end
+squarex1 <= squarex1_next;
+squarey1 <= squarey1_next;
+end
+
+always @(*)
+begin
+squarex1_next = squarex1;
+squarey1_next = squarey1;
+if (refr_tick)
+	if (~moveup)
+		squarey1_next = squarey1 - 1;
+	else if (~movedown)
+		squarey1_next = squarey1 + 1;
+	else if (~moveright)
+		squarex1_next = squarex1 + 1;
 end	
 
-// drawing background, draw moving square before background maze
-//always@(x, y, clk, moveup, moveright, movedown)
+// rgb multiplexer
+
 always@(*)
 begin
-	if ((squarex1 < x) && (squarex2 >= x) && (squarey1 < y) && (squarey2 >= y))
+	if (square_on)
 		begin
 		idx = 5;
 		end
