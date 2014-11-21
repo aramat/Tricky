@@ -79,7 +79,7 @@ VGA_Audio_PLL 	p1 (
 wire [9:0] r, g, b;
 
 assign LEDG[2:0] = SW[3:1];
-maze c1(mCoord_X, mCoord_Y, CLOCK_50, SW[1], SW[2], SW[3], r, g, b);   // ONLY THING CHANGED FROM ORIGINAL CODE
+maze c1(mCoord_X, mCoord_Y, CLOCK_50, SW[0], KEY[3], KEY[2], KEY[1], r, g, b);   // ONLY THING CHANGED FROM ORIGINAL CODE
 
 wire [9:0] gray = (mCoord_X<80 || mCoord_X>560? 10'h000:
 	(mCoord_Y/15)<<5 | (mCoord_X-80)/15);
