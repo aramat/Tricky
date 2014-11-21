@@ -1,10 +1,11 @@
-module maze(input [9:0]x, input[9:0]y, input clk, input moveup, input movedown, input moveright, output [9:0] red, output [9:0] green, output [9:0] blue);
+module maze(input [9:0]x, input[9:0]y, input clk, input reset, input moveup, input movedown, input moveright, output [9:0] red, output [9:0] green, output [9:0] blue);
 
 // x1, y1 designate the upperleft corner of the square
 reg [9:0] squarex1, squarey1, squarex1_next, squarey1_next;
 wire [9:0] squarex1_check, squarey1_check, squarey2, squarex2;
 localparam SQUARE_SIZE = 15; 
 wire square_on;
+wire collision_on;
 
 wire refr_tick;
 assign refr_tick = (y == 481) && (x == 0);
@@ -19,7 +20,7 @@ begin
 	squarex1 <= 9'd55;
 	squarey1 <= 9'd55;
 end
-	
+
 // moving the square, DON'T USE POSEDGE
 //always @(negedge moveup or negedge moveright or negedge movedown)
 assign squarex1_check = squarex1;
@@ -28,7 +29,18 @@ assign squarex2 = squarex1_check + SQUARE_SIZE;
 assign squarey2 = squarey1_check + SQUARE_SIZE;
 assign square_on = (squarex1_check < x) && (squarex2 >= x) && (squarey1_check < y) && (squarey2 >= y);
 
-always @(posedge clk)
+
+
+
+
+
+always @(posedge clk, posedge reset)
+if (reset)
+begin
+squarex1 <= 9'd55;
+squarey1 <= 9'd55;
+end
+else
 begin
 squarex1 <= squarex1_next;
 squarey1 <= squarey1_next;
