@@ -46,6 +46,7 @@ squarex1 <= squarex1_next;
 squarey1 <= squarey1_next;
 end
 
+
 always @(*)
 begin
 squarex1_next = squarex1;
@@ -53,11 +54,16 @@ squarey1_next = squarey1;
 if (refr_tick)
 	if (~moveup)
 		squarey1_next = squarey1 - 1;
+	else if ((squarey1_next <= 47) & (squarex2 > 123))
+	begin
+	squarex1_next = 9'd55;
+	squarey1_next = 9'd55;
+	end
 	else if (~movedown)
 		squarey1_next = squarey1 + 1;
 	else if (~moveright)
 		squarex1_next = squarex1 + 1;
-end	
+end
 
 // rgb multiplexer
 
