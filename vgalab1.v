@@ -112,6 +112,7 @@ VGA_Controller	u1 (
 );
 */
 
+count_down(SW, CLOCK_50, HEX0, HEX1);
 
 vga_sync u1(
    .iCLK(VGA_CTRL_CLK),
