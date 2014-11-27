@@ -65,18 +65,26 @@ assign squarey2 = squarey1 + SQUARE_SIZE;
 
 assign square_on = (squarex1 < x) && (squarex2 >= x) && (squarey1 < y) && (squarey2 >= y);
 
+reg [40:0] count;
+
 always @(posedge clk, posedge reset)
 if (reset)
 begin
 squarex1_reg <= 9'd55;
 squarey1_reg <= 9'd55;
 end
+else if (count==41'd80_000_000)
+begin
+	count <= 41'd0;
+	 squarex1_reg <= squarex1_next - 15;
+	 squarey1_reg <= squarey1_next;
+end
 else
 begin
+count <= count+1;
 squarex1_reg <= squarex1_next;
 squarey1_reg <= squarey1_next;
 end
-
 
 always @(*)
 begin
