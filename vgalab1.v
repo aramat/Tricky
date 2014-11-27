@@ -44,13 +44,11 @@ Reset_Delay r0(	.iCLK(CLOCK_50),.oRESET(DLY_RST) );
 assign LEDR = SW;
 
 // Turn off green leds
-assign LEDG[8:3] = 8'h00;
+assign LEDG[7:3] = 8'h00;
 
 wire [6:0] blank = 7'b111_1111;
 
 // blank unused 7-segment digits
-assign HEX0 = blank;
-assign HEX1 = blank;
 assign HEX2 = blank;
 assign HEX3 = blank;
 assign HEX4 = blank;
@@ -77,9 +75,10 @@ VGA_Audio_PLL 	p1 (
 );
 
 wire [9:0] r, g, b;
-
+wire rs;
+assign rs = LEDG[8] | SW[0];
 assign LEDG[2:0] = SW[3:1];
-maze c1(mCoord_X, mCoord_Y, CLOCK_50, SW[0], KEY[3], KEY[2], KEY[1], r, g, b);   // ONLY THING CHANGED FROM ORIGINAL CODE
+maze c1(mCoord_X, mCoord_Y, CLOCK_50, rs, KEY[1], KEY[2], KEY[3], r, g, b);   // ONLY THING CHANGED FROM ORIGINAL CODE
 
 wire [9:0] gray = (mCoord_X<80 || mCoord_X>560? 10'h000:
 	(mCoord_Y/15)<<5 | (mCoord_X-80)/15);
@@ -112,7 +111,7 @@ VGA_Controller	u1 (
 );
 */
 
-count_down(SW, CLOCK_50, HEX0, HEX1);
+count_down(SW, CLOCK_50, HEX0, HEX1, LEDG[8]);
 
 vga_sync u1(
    .iCLK(VGA_CTRL_CLK),
