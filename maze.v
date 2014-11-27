@@ -1,68 +1,108 @@
 module maze(input [9:0]x, input[9:0]y, input clk, input reset, input moveup, input movedown, input moveright, output [9:0] red, output [9:0] green, output [9:0] blue);
 
+
+
+
 // x1, y1 designate the upperleft corner of the square
-reg [9:0] squarex1, squarey1, squarex1_next, squarey1_next;
-wire [9:0] squarex1_check, squarey1_check, squarey2, squarex2;
+
+reg [9:0] squarex1_reg, squarey1_reg, squarex1_next, squarey1_next;
+
+wire [9:0] squarey2, squarex2, squarex1, squarey1;
+
 localparam SQUARE_SIZE = 15; 
+
+localparam SQUARE_SPEED = 1;
+
 wire square_on;
+
 wire collision_on;
 
+
+
+
 wire refr_tick;
+
 assign refr_tick = (y == 481) && (x == 0);
 
+
+
+
 reg [2:0] idx;
+
 assign red = (idx[0]? 10'h3ff: 10'he1);
+
 assign green = (idx[1]? 10'h3ff: 10'h2c2);
+
 assign blue = (idx[2]? 10'h3ff: 10'h37a);
 
+
+
+
 initial 
+
 begin
-	squarex1 <= 9'd55;
-	squarey1 <= 9'd55;
+
+	squarex1_reg <= 9'd55;
+
+	squarey1_reg <= 9'd55;
+
 end
 
+
+
+
 // moving the square, DON'T USE POSEDGE
+
 //always @(negedge moveup or negedge moveright or negedge movedown)
-assign squarex1_check = squarex1;
-assign squarey1_check = squarey1;
-assign squarex2 = squarex1_check + SQUARE_SIZE; 
-assign squarey2 = squarey1_check + SQUARE_SIZE;
-assign square_on = (squarex1_check < x) && (squarex2 >= x) && (squarey1_check < y) && (squarey2 >= y);
 
+assign squarex1 = squarex1_reg;
 
+assign squarey1 = squarey1_reg;
 
+assign squarex2 = squarex1 + SQUARE_SIZE; 
 
+assign squarey2 = squarey1 + SQUARE_SIZE;
 
+assign square_on = (squarex1 < x) && (squarex2 >= x) && (squarey1 < y) && (squarey2 >= y);
 
-always @(posedge clk, posedge reset)
 if (reset)
 begin
-squarex1 <= 9'd55;
-squarey1 <= 9'd55;
+squarex1_reg <= 9'd55;
+squarey1_reg <= 9'd55;
 end
 else
 begin
-squarex1 <= squarex1_next;
-squarey1 <= squarey1_next;
+squarex1_reg <= squarex1_next;
+squarey1_reg <= squarey1_next;
 end
 
 
 always @(*)
 begin
-squarex1_next = squarex1;
-squarey1_next = squarey1;
+squarex1_next = squarex1_reg;
+squarey1_next = squarey1_reg;
 if (refr_tick)
-	if (~moveup)
-		squarey1_next = squarey1 - 1;
-	else if ((squarey1_next <= 47) & (squarex2 > 123))
+	if (((squarey1_next <= 47) | ((squarey1_next +SQUARE_SIZE) > 328 )) & (squarex1_next >= 46) & ((squarex1_next +SQUARE_SIZE) < 123 )) 
 	begin
-	squarex1_next = 9'd55;
-	squarey1_next = 9'd55;
+	squarex1_next = 55;
+	squarey1_next = 55;
 	end
+	else if (((squarex1_next <= 46) | ((squarex1_next +SQUARE_SIZE) > 123 )) & (squarey1_next >= 47) & ((squarey1_next +SQUARE_SIZE) < 250)) 
+	begin
+	squarex1_next = 55;
+	squarey1_next = 55;
+	end
+	else if (((squarey1_next <= 250) | ((squarey1_next +SQUARE_SIZE) > 328 )) & (squarex1_next >= 123) & ((squarex1_next +SQUARE_SIZE) < 158))
+	begin
+	squarex1_next = 55;
+	squarey1_next = 55;
+	end
+	else if (~moveup)
+		squarey1_next = squarey1_reg - 1;
 	else if (~movedown)
-		squarey1_next = squarey1 + 1;
+		squarey1_next = squarey1_reg + 1;
 	else if (~moveright)
-		squarex1_next = squarex1 + 1;
+		squarex1_next = squarex1_reg + 1;
 end
 
 // rgb multiplexer
