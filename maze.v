@@ -65,6 +65,7 @@ assign squarey2 = squarey1 + SQUARE_SIZE;
 
 assign square_on = (squarex1 < x) && (squarex2 >= x) && (squarey1 < y) && (squarey2 >= y);
 
+always @(posedge clk, posedge reset)
 if (reset)
 begin
 squarex1_reg <= 9'd55;
