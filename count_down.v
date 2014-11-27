@@ -1,8 +1,9 @@
-module count_down(A, clock_50, display_0, display_1);
+
+module count_down(A, clock_50, display_0, display_1, time_out);
  input [2:1] A;
  input clock_50;
  output [6:0] display_0, display_1;
- 
+ output time_out;
  wire [4:0] Q, digits, tens;
  wire del_1sec;
  
@@ -40,7 +41,7 @@ module count_down(A, clock_50, display_0, display_1);
 
  dec_7seg dec2((5'b00011 - tens), display_1);
 
-
+assign time_out = ((display_1 == 7'b1000000) & (display_0 == 7'b1000000));
 
 
 
