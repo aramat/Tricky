@@ -2,7 +2,6 @@ module maze(input [9:0]x, input[9:0]y, input clk, input reset, input moveup, inp
 
 
 
-
 // x1, y1 designate the upperleft corner of the square
 
 reg [9:0] squarex1_reg, squarey1_reg, squarex1_next, squarey1_next;
@@ -73,11 +72,21 @@ begin
 squarex1_reg <= 9'd55;
 squarey1_reg <= 9'd55;
 end
-else if (count==41'd80_000_000)
+else if (count==41'd120_000_000)
 begin
+	if (((squarex1_next >= 46) & ((squarex1_next +SQUARE_SIZE) < 123 )) | ((squarex1_next >= 158) & ((squarex1_next +SQUARE_SIZE) < 236)) | 
+	((squarex1_next >= 281) & ((squarex1_next +SQUARE_SIZE) < 358)) | ((squarex1_next >= 426) & ((squarex1_next +SQUARE_SIZE) < 503)))
+	begin
 	count <= 41'd0;
-	 squarex1_reg <= squarex1_next - 15;
+	 squarex1_reg <= squarex1_next;
 	 squarey1_reg <= squarey1_next;
+	 end
+	 else 
+	 begin
+	 count <= 41'd0;
+	 squarex1_reg <= squarex1_next;
+	 squarey1_reg <= squarey1_next;
+	 end
 end
 else
 begin
@@ -96,12 +105,57 @@ if (refr_tick)
 	squarex1_next = 55;
 	squarey1_next = 55;
 	end
-	else if (((squarex1_next <= 46) | ((squarex1_next +SQUARE_SIZE) > 123 )) & (squarey1_next >= 47) & ((squarey1_next +SQUARE_SIZE) < 250)) 
+	else if (((squarex1_next <= 46) | ((squarex1_next < 123) &((squarex1_next +SQUARE_SIZE) > 123 ))) & (squarey1_next >= 47) & ((squarey1_next +SQUARE_SIZE) < 250)) 
 	begin
 	squarex1_next = 55;
 	squarey1_next = 55;
 	end
 	else if (((squarey1_next <= 250) | ((squarey1_next +SQUARE_SIZE) > 328 )) & (squarex1_next >= 123) & ((squarex1_next +SQUARE_SIZE) < 158))
+	begin
+	squarex1_next = 55;
+	squarey1_next = 55;
+	end
+	else if (((squarey1_next <= 250) | ((squarey1_next +SQUARE_SIZE) > 429)) & (squarex1_next >= 158) & ((squarex1_next +SQUARE_SIZE) < 236))
+	begin
+	squarex1_next = 55;
+	squarey1_next = 55;
+	end
+	else if (((squarex1_next +SQUARE_SIZE) > 236) &(squarex1_next < 236) & (squarey1_next >= 250) & ((squarey1_next +SQUARE_SIZE) < 351))
+	begin
+	squarex1_next = 55;
+	squarey1_next = 55;
+	end
+	else if (((squarey1_next <= 351) | ((squarey1_next +SQUARE_SIZE) > 429)) & (squarex1_next >= 236) & ((squarex1_next +SQUARE_SIZE) < 281))
+	begin
+	squarex1_next = 55;
+	squarey1_next = 55;
+	end
+	else if (((squarex1_next +SQUARE_SIZE) > 358) & (squarex1_next < 358) & (squarey1_next >= 159) & ((squarey1_next +SQUARE_SIZE) < 429))
+	begin
+	squarex1_next = 55;
+	squarey1_next = 55;
+	end
+	else if (((squarey1_next <= 81) | ((squarey1_next +SQUARE_SIZE) > 429)) & (squarex1_next >= 281) & ((squarex1_next +SQUARE_SIZE) < 358))
+	begin
+	squarex1_next = 55;
+	squarey1_next = 55;
+	end
+	else if (((squarey1_next <= 81) | ((squarey1_next +SQUARE_SIZE) > 159)) & (squarex1_next >= 358) & ((squarex1_next +SQUARE_SIZE) < 426))
+	begin
+	squarex1_next = 55;
+	squarey1_next = 55;
+	end
+	else if (((squarex1_next +SQUARE_SIZE) > 503) & (squarey1_next >= 81) & ((squarey1_next +SQUARE_SIZE) < 222))
+	begin
+	squarex1_next = 55;
+	squarey1_next = 55;
+	end
+	else if (((squarey1_next <= 81) | ((squarey1_next +SQUARE_SIZE) > 299)) & (squarex1_next >= 426) & ((squarex1_next +SQUARE_SIZE) < 503))
+	begin
+	squarex1_next = 55;
+	squarey1_next = 55;
+	end
+	else if (((squarey1_next <= 222) | ((squarey1_next +SQUARE_SIZE) > 299)) & (squarex1_next >= 503) & ((squarex1_next +SQUARE_SIZE) < 609))
 	begin
 	squarex1_next = 55;
 	squarey1_next = 55;
