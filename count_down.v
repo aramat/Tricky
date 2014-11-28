@@ -1,6 +1,5 @@
-
 module count_down(A, clock_50, display_0, display_1, time_out);
- input [2:1] A;
+ input [1:0] A;
  input clock_50;
  output [6:0] display_0, display_1;
  output time_out;
@@ -24,11 +23,11 @@ module count_down(A, clock_50, display_0, display_1, time_out);
 //  end
 // end
 // 
- t_flipflop tff0(~A[2], del_1sec, ~A[1], Q[0]);
- t_flipflop tff1((~A[2] & Q[0]), del_1sec, ~A[1], Q[1]);
- t_flipflop tff2((~A[2] & Q[0] & Q[1]), del_1sec, ~A[1], Q[2]);
- t_flipflop tff3((~A[2] & Q[0] & Q[1] & Q[2]), del_1sec, ~A[1], Q[3]);
- t_flipflop tff4((~A[2] & Q[0] & Q[1] & Q[2]& Q[3]), del_1sec, ~A[1], Q[4]);
+ t_flipflop tff0(~A[1], del_1sec, ~A[0], Q[0]);
+ t_flipflop tff1((~A[1] & Q[0]), del_1sec, ~A[0], Q[1]);
+ t_flipflop tff2((~A[1] & Q[0] & Q[1]), del_1sec, ~A[0], Q[2]);
+ t_flipflop tff3((~A[1] & Q[0] & Q[1] & Q[2]), del_1sec, ~A[0], Q[3]);
+ t_flipflop tff4((~A[1] & Q[0] & Q[1] & Q[2]& Q[3]), del_1sec, ~A[0], Q[4]);
  
  bin_to_decimal con1(Q, digits, tens);
  
@@ -133,3 +132,4 @@ module dec_7seg (C, Display);
        (C[3:0]==4'b1000)? 7'b0000000:
        (C[3:0]==4'b1001)? 7'b0010000: 7'b1111111;
 endmodule
+
